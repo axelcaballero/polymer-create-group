@@ -1,0 +1,161 @@
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../paper-button/paper-button.html"/>
+<link rel="import" href="../paper-card/paper-card.html"/>
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../polymer/polymer.html"/>
+<!--
+`<polymer-create-group>` will create a new group with user defined data such as group type, group name and group description.
+
+@group UI Elements
+@element polymer-create-group
+@demo demo/index.html
+-->
+
+<dom-module id="polymer-create-group">
+
+  <template>
+    <iron-ajax id="ajax"
+      url="[[saveUrl]]"
+      method="POST"
+      body="{{_requestBody}}"
+      handle-as="json"
+      on-error="_handleError"
+      on-response="_handleResponse">
+    </iron-ajax>
+
+    <paper-card heading="Create Group" id="container">
+
+      <div class="card-content">
+        
+        <paper-dropdown-menu label="Group type" value={{groupType}}>
+          <paper-listbox class="dropdown-content" attrForSelected="type">
+            <template is="dom-repeat" items="[[groupTypeOptions]]">
+              <paper-item type={{item}}>{{item}}</paper-item>
+            </template>
+          </paper-listbox>
+        </paper-dropdown-menu>
+
+        <paper-input
+          label="Group name"
+          value="{{groupName}}">
+        </paper-input>
+
+        <paper-input
+          label="Description"
+          value="{{groupDescription}}">
+        </paper-input>
+
+      </div>
+      <div class="card-actions">
+        <paper-button id="save" on-click="_save" raised disabled={{!_enabled}}>Save</paper-button>
+        <paper-button id="reset" on-click="_reset" raised>Cancel</paper-button>
+      </div>
+    </paper-card>
+    <paper-toast id="validationToast" class="fit-bottom"></paper-toast>
+  </template>
+
+  <script>
+  Polymer({
+    is: 'polymer-create-group',
+    properties: {
+      /**  options for the group type dropdown menu */
+      groupTypeOptions: {
+        type: Array,
+        value: ['Public', 'Private', 'Invite Only'],
+        notify: true
+      },
+      /**  the type of the group to be created */
+      groupType: {
+        type: String,
+        value: '',
+        notify: true
+      },
+      /**  the name of the group to be created */
+      groupName: {
+        type: String,
+        value: '',
+        notify: true
+      },
+      /**  the description of the group to be created */
+      groupDescription: {
+        type: String,
+        value: '',
+        notify: true
+      },
+      /**  enables/disables save button by validating values in form */
+      _enabled: {
+        type: Boolean,
+        value: false,
+        computed: '_validate(groupType, groupName, groupDescription)'
+      },
+      /**  url for ajax request */
+      saveUrl: {
+        type: String,
+        value: 'http://localhost:8083/groups'
+      },
+      /** ajax request body content */
+      _requestBody: String
+    },
+    /**
+     * Fires when user clicks on "cancel" button,
+     * setting the properties and binded input fields to a blank value.
+     */
+    _reset() {
+      document.querySelector('paper-dropdown-menu')._setSelectedItem(null);
+      this.groupName = '';
+      this.groupDescription = '';
+    },
+    /**
+     * Fires when data on input fields changes.
+     * @param {String} groupType   - current value of related input field.
+     * @param {String} groupName   - current value of related input field.
+     * @param {String} groupDescription   - current value of related input field.
+     * @returns {boolean}  - Will return true is all the values are different from default.
+     */
+    _validate(groupType, groupName, groupDescription) {
+      return groupType !== null && groupName !== '' && groupDescription !== '';
+    },
+    /**
+     * Fires when user clicks on "save" button, saving the value of the input fields to a collection via an ajax request.
+     * If an object with the same groupName value exists, it returns error, otherwise it's accepted.
+     * @param {String} groupType   - current value of related input field.
+     * @param {String} groupName   - current value of related input field.
+     * @param {String} groupDescription   - current value of related input field.
+     */
+    _save(groupType, groupName, groupDescription) {
+      this._requestBody =
+        `groupName=${this.groupName}&groupType=${this.groupType}&groupDescription=${this.groupDescription}`;
+      return this.$.ajax.generateRequest();
+    },
+    /**
+     * Fires when the ajax request returns an error (i.e. a group with that name exists)
+     * Will display an error message via paper-toast.
+     * @param {Object} event   - ajax request response.
+     */
+    _handleError(event) {
+      if (event.detail.request.status === 403) {
+        this.$.validationToast.text = 'Error: group already exists';
+      } else {
+        this.$.validationToast.text = 'Unexpected error. Try again';
+      }
+      this.$.validationToast.fitInto = this.$.container;
+      this.$.validationToast.open();
+    },
+    /**
+     * Fires when the ajax request is succesful (new group created)
+     * Will display a success message via paper-toast and resets the form.
+     * @param {Object} event   - ajax request response.
+     */
+    _handleResponse(event) {
+      this.$.validationToast.text = 'Group created successfuly';
+      this.$.validationToast.fitInto = this.$.container;
+      this.$.validationToast.open();
+      this._reset();
+    }
+  });
+  </script>
+</dom-module>
