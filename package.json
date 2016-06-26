@@ -1,0 +1,35 @@
+{
+  "name": "polymer-create-group",
+  "version": "1.0.0",
+  "description": "create group component",
+  "main": "polymer-create-group.html",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "body-parser": "^1",
+    "cors": "^2.7.1",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "babel-eslint": "^5.0.4",
+    "chai": "^3.5.0",
+    "eslint": "^1.10.3",
+    "eslint-plugin-html": "^1.4.0",
+    "mocha": "^2.4.5",
+    "web-component-tester": "^3.3.30"
+  },
+  "scripts": {
+    "test": "wct",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "polymer-create-group"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:gatom0g/polymer-create-group.git"
+  },
+  "author": "Axel Caballero",
+  "homepage": "https://github.com/gatom0g/polymer-create-group#readme"
+}

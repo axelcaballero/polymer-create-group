@@ -1,0 +1,33 @@
+{
+  "name": "polymer-create-group",
+  "description": "creates a new group",
+  "authors": [
+    "Axel C. <axel.caballero@gmail.com>"
+  ],
+  "main": "polymer-create-group.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "paper-input": "PolymerElements/paper-input#^1.1.11",
+    "paper-card": "PolymerElements/paper-card#^1.1.1",
+    "paper-toast": "PolymerElements/paper-toast#^1.3.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.2.0",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.2.2",
+    "paper-listbox": "polymerelements/paper-listbox#^1.1.2",
+    "paper-item": "PolymerElements/paper-item#^1.2.1"
+  },
+  "devDependencies": {
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.1.1",
+    "paper-styles": "PolymerElements/paper-styles#^1.1.4",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.2.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.2.2"
+  }
+}
